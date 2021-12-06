@@ -5,12 +5,12 @@ import {
   GET_CURRENT, GET_PREVIOS,
   Headerindex,
   PhoneGeoHash,
-  PhoneGeoHashDateTimeCounts, PhoneGeoHashNameCount,
-  StayTime,
+  PhoneGeoHashDateTimeCounts, PhoneGeoHashNameCount, RowContent,
+  StayTime, upLoadContens,
   ViewData
 } from "../../headerindex";
-import {nl_BE} from "ng-zorro-antd/i18n";
 
+// @ts-ignore
 @Component({
   selector: 'app-show',
   templateUrl: './show.component.html',
@@ -29,8 +29,15 @@ export class ShowComponent implements OnInit {
 
   //rows表示根据换行符解析出来的每行.
   // 每行中又要string数组，根据逗号解析出来的每个字段
+
+  //tabs: string[] = [];
+
+  rows2:upLoadContens[] = [];
+
   // @ts-ignore
   rows : string[string[]] = [[]];
+
+  rowContent : RowContent[] = [];
 
   // @ts-ignore
   displayRows: string[string[]] = [[]];
@@ -80,6 +87,9 @@ export class ShowComponent implements OnInit {
     }
     else {
       //console.log(this.tableData);
+
+      //this.getImportData();
+
       this.analyseDataValues();
 
      this.displayRows = this.rows.slice(0, 5);
@@ -91,6 +101,52 @@ export class ShowComponent implements OnInit {
 
   getUpdateTextViews() {
     this.service.getTableData().subscribe(data => this.tableData = data);
+  }
+
+
+  getTheChoosedColumns(header:string | undefined):Headerindex {
+    let headerIndex = {} as Headerindex;
+    headerIndex.numberIndex = this.headers.indexOf(this.selectedNumbers);
+    headerIndex.dateIndex = this.headers.indexOf(this.selectedDateTime);
+    headerIndex.geohashIndex = this.headers.indexOf(this.selectedGEOHASH);
+    return headerIndex;
+  }
+
+  getLindeSplited(lines: string[]){
+
+    lines.forEach(line =>{
+
+      //去掉双引号
+      let rowValues2: upLoadContens = {tableEachRow: []};
+      line.split(',').forEach(data => {
+
+        let tmp = data;
+        tmp = tmp.substr(0, 1) === "\"" ? tmp.substring(1, tmp.length - 1).trim() : tmp.trim();
+        tmp = tmp.substr(-1, 1) === "\"" ? tmp.substring(0, tmp.length - 1).trim() : tmp.trim();
+        rowValues2.tableEachRow.push(tmp);
+
+      });
+      this.rows2.push(rowValues2)
+
+    });
+    //console.log(this.rows2)
+
+  }
+
+  getImportData():void {
+
+    let lines:string[] = this.tableData.split(/\r?\n/);
+    let header:string | undefined = lines.shift();
+    //console.log(this.getTheChoosedColumns(header));
+    this.getLindeSplited(lines);
+    console.log(this.rows2)
+    this.service.sendImportDataToServer({"header":this.getTheChoosedColumns(header), "content":this.rows2})
+      .subscribe(data =>{
+        console.log(data);
+      })
+
+    //把这个数组清空，为了下次点击时能再使用.为了调试的时候使用，正常 情况下发生跳转也用不到这个参数
+    this.rows2 = []
   }
 
   analyseDataValues() {
@@ -111,19 +167,26 @@ export class ShowComponent implements OnInit {
 
       //去掉双引号
       let rowValues: string[] = [];
+      let rowValues2: upLoadContens = {tableEachRow: []};
       line.split(',').forEach(data => {
 
         let tmp = data;
         tmp = tmp.substr(0, 1) === "\"" ? tmp.substring(1, tmp.length - 1).trim() : tmp.trim();
         tmp = tmp.substr(-1, 1) === "\"" ? tmp.substring(0, tmp.length - 1).trim() : tmp.trim();
         rowValues.push(tmp);
+        rowValues2.tableEachRow.push(tmp);
 
       });
-      if (rowValues.length > 1) this.rows.push(rowValues);
+      if (rowValues.length > 1) {
+        this.rows.push(rowValues);
+        //this.rows2.push(rowValues2)
+      }
 
     });
 
     this.rows.shift();
+
+    //console.log(this.rows2)
 
   }
 
@@ -365,12 +428,20 @@ export class ShowComponent implements OnInit {
     }, 500);
 
 
+
     //this.service.setViewData(this.viewDates);
 
     //
 
     //console.log(this.viewDates);
 
+
+  }
+
+
+  sendDataToBackEnds():void {
+
+    this.service.sendImportDataToServer(this.rows);
 
   }
 

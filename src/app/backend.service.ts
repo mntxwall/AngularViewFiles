@@ -1,6 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {Observable, of} from "rxjs";
-import {PhoneGeoHashDateTimeCounts, ViewData} from "./headerindex";
+import {dataToBackend, PhoneGeoHashDateTimeCounts, ViewData} from "./headerindex";
+import {tap} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class BackendService {
 
   tripPhonesGeoHashDataTime: PhoneGeoHashDateTimeCounts[] = [];
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   setTableData(data: string) {
     this.tableData = data;
@@ -37,6 +39,13 @@ export class BackendService {
   }
   getTripPhoneGeoHashDataTime(): Observable<PhoneGeoHashDateTimeCounts[]>{
     return of(this.tripPhonesGeoHashDataTime)
+  }
+
+
+  sendImportDataToServer(contents: dataToBackend): Observable<string[]>  {
+    console.log("Hello")
+    return this.http.post<string[]>("http://192.168.92.128:9000/api/match", contents).pipe(
+      tap(_ => console.log('postData')))
   }
 
 

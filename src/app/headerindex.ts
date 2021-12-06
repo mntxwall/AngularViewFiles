@@ -5,6 +5,19 @@ export interface Headerindex {
   baseName: number;
 }
 
+export interface RowContent {
+  userNumber: string;
+  userTimes: string;
+  userGeoHash:string;
+}
+export interface dataToBackend{
+  header: Headerindex,
+  content: upLoadContens[]
+}
+export interface upLoadContens{
+  tableEachRow: string[]
+}
+
 export interface ViewData {
   phone: string;
   inDateTime: string;
