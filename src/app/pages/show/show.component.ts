@@ -339,9 +339,7 @@ export class ShowComponent implements OnInit {
       this.rows.forEach(row=> {
 
        // this.getTripGeoHahsDataTime2(headerIndex, row);
-
         this.doTheTimeCalculating(headerIndex, row);
-
         this.doGeoHashNameCalculation(headerIndex, row);
 
 
@@ -366,7 +364,8 @@ export class ShowComponent implements OnInit {
           e.geoHashNameCount = tmp[0].baseNameCount;
 
           //把出现机场、车站、动车的字眼保存在另外的数组中
-          if (e.geoHashName.includes('车站') || e.geoHashName.includes('机场') || e.geoHashName.includes('动车')){
+          if (e.geoHashName.includes('车站') || e.geoHashName.includes('机场')
+            || e.geoHashName.includes('动车') || e.geoHashName.includes('服务区')){
             this.tripPhoneGeoHahsDataTime.push(e)
           }
         }
@@ -375,13 +374,6 @@ export class ShowComponent implements OnInit {
 
       this.service.setResultPhoneGeoHashDataTime(this.resultPhonesGeoHashDataTime);
       this.service.setTripPhoneGeoHashDataTime(this.tripPhoneGeoHahsDataTime);
-
-      //console.log(this.resultPhoneGeoHashNameCount);
-
-     // console.log(this.resultPhonesGeoHashDataTime);
-
-      //console.log(this.tripPhoneGeoHahsDataTime);
-
       this.router.navigateByUrl("/welcome/result");
 
     }, 500);
