@@ -280,10 +280,7 @@ export class ShowComponent implements OnInit {
       baseName: baseName,
       baseNameCount: 0
     };
-
     this.resultPhoneGeoHashNameCount.push(currentPhoneGeoHashNameCount);
-
-
   }
 
   getTripGeohashDataTime(tripGeoHash: PhoneGeoHashDateTimeCounts, tripGeoHashBaseName: PhoneGeoHashNameCount[]) {
@@ -341,7 +338,7 @@ export class ShowComponent implements OnInit {
       //用一个循环解决问题
       this.rows.forEach(row=> {
 
-        this.getTripGeoHahsDataTime2(headerIndex, row);
+       // this.getTripGeoHahsDataTime2(headerIndex, row);
 
         this.doTheTimeCalculating(headerIndex, row);
 
@@ -365,34 +362,15 @@ export class ShowComponent implements OnInit {
           tmp.sort((g1, g2) =>{
             return g1.baseNameCount < g2.baseNameCount ? 1: -1
           });
-
           e.geoHashName = tmp[0].baseName;
           e.geoHashNameCount = tmp[0].baseNameCount;
+
+          //把出现机场、车站、动车的字眼保存在另外的数组中
+          if (e.geoHashName.includes('车站') || e.geoHashName.includes('机场') || e.geoHashName.includes('动车')){
+            this.tripPhoneGeoHahsDataTime.push(e)
+          }
         }
-
-
-
-
-        let tmpTripBaseName = tmp.filter(f => {
-
-          //console.log(f.baseName.indexOf("机场"))
-          return f.baseName.indexOf("机场")? 0: 1
-        });
-
-        console.log("This is airport")
-        console.log(tmpTripBaseName);
-
-        this.getTripGeohashDataTime(e, tmpTripBaseName)
-
-
-        //找出最大基站名称计数的基站
-        tmp.sort((g1, g2) =>{
-          return g1.baseNameCount < g2.baseNameCount ? 1: -1
-        });
-        e.geoHashName = tmp[0].baseName;
-        e.geoHashNameCount = tmp[0].baseNameCount;
         //console.log(tmp[0])
-
       });
 
       this.service.setResultPhoneGeoHashDataTime(this.resultPhonesGeoHashDataTime);
@@ -402,7 +380,7 @@ export class ShowComponent implements OnInit {
 
      // console.log(this.resultPhonesGeoHashDataTime);
 
-      console.log(this.tripPhoneGeoHahsDataTime);
+      //console.log(this.tripPhoneGeoHahsDataTime);
 
       this.router.navigateByUrl("/welcome/result");
 
