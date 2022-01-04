@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { WelcomeComponent } from './welcome.component';
-import {ShowComponent} from "../show/show.component";
-import {DisplayComponent} from "../display/display.component";
+import {CalculateComponent} from "../calculate/calculate.component";
+import {ResultComponent} from "../result/result.component";
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent },
-  { path: 'show', component: ShowComponent},
-  { path: 'result', component: DisplayComponent}
+  { path: 'calculate', component: CalculateComponent},
+  { path: 'display', component: ResultComponent}
 ];
 
 @NgModule({

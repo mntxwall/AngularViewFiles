@@ -10,16 +10,16 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { IconDefinition } from '@ant-design/icons-angular';
 import * as AllIcons from '@ant-design/icons-angular/icons';
-import { ShowComponent } from '../show/show.component';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import {BrowserModule} from "@angular/platform-browser";
 import {CommonModule} from "@angular/common";
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import {FormsModule} from "@angular/forms";
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { DisplayComponent } from '../display/display.component';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { CalculateComponent } from '../calculate/calculate.component';
+import { ResultComponent } from '../result/result.component';
 
 
 
@@ -45,7 +45,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     NzListModule,
     NzModalModule
   ],
-  declarations: [WelcomeComponent, ShowComponent, DisplayComponent],
+  declarations: [WelcomeComponent, CalculateComponent, ResultComponent],
   exports: [WelcomeComponent],
   providers: [{ provide: NZ_ICONS, useValue: icons } ]
 })

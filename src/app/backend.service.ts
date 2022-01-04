@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable, of} from "rxjs";
-import {PhoneGeoHashDateTimeCounts, ViewData} from "./headerindex";
+import {ExportPhonesResult, PhoneGeoHashDateTimeCounts, ViewData} from "./headerindex";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,8 @@ export class BackendService {
   resultPhonesGeoHashDataTime: PhoneGeoHashDateTimeCounts[] = [];
 
   tripPhoneGeoHashDataTime: PhoneGeoHashDateTimeCounts[] = [];
+
+  resultExportGeoHashData: ExportPhonesResult[] = [];
 
   constructor() { }
 
@@ -38,6 +40,14 @@ export class BackendService {
 
   getTripPhoneGeoHashDataTime(): Observable<PhoneGeoHashDateTimeCounts[]>{
     return of(this.tripPhoneGeoHashDataTime)
+  }
+
+  setResultDisplayData(data: ExportPhonesResult[]){
+    this.resultExportGeoHashData = data;
+  }
+
+  getExportGeoHashDataTime(): Observable<ExportPhonesResult[]>{
+    return of(this.resultExportGeoHashData)
   }
 
 

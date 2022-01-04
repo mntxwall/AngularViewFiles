@@ -1,0 +1,27 @@
+<button nz-button nzType="primary"
+        (click)="exportExcel()"
+        [nzLoading]="isExporting"
+>
+  {{ isExporting ? '导出中' : '导出' }}
+</button>
+
+<nz-table nzTemplateMode [nzScroll]="{y: '700px'}">
+  <thead>
+  <tr>
+    <th>号码</th>
+    <th>进入时间</th>
+    <th>离开时间</th>
+    <th>GEOHASH中最多次数基站名</th>
+    <th>时长（分钟）</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let row of displayPhonesGeoHashDataTime">
+    <td>{{row.phone}}</td>
+    <td>{{row.beginTime}}</td>
+    <td>{{row.endTime}}</td>
+    <td>{{row.geoHashName}}</td>
+    <td>{{row.interval}}</td>
+  </tr>
+  </tbody>
+</nz-table>

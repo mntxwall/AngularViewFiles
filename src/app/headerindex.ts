@@ -11,10 +11,21 @@ export interface ViewData {
   geohash: string;
 }
 
+export interface RowData{
+  row: string[];
+}
+
 export interface StayTime {
   start: string;
   end: string;
   interval: number;
+}
+
+export interface PhoneGeoHashNew {
+  phone: string;
+  geoHash: string;
+  inDateTime: string;
+  geoHashName: string;
 }
 
 export interface PhoneGeoHash {
@@ -38,6 +49,7 @@ export interface ExportPhonesResult{
   beginTime: string;
   endTime: string;
   interval: number;
+  geoHashName: string;
 }
 
 export interface PhoneGeoHashName {
@@ -49,6 +61,13 @@ export interface PhoneGeoHashName {
 export interface PhoneGeoHashNameCount{
   phone: string;
   geohash: string;
+  baseName: string;
+  baseNameCount: number;
+}
+
+export interface PhoneGeoHashNameCountNew{
+  phone: string;
+  geoHash: string;
   baseName: string;
   baseNameCount: number;
 }

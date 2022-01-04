@@ -45,7 +45,8 @@ export class WelcomeComponent implements OnInit {
       if (this.reader.result) {
         this.service.setTableData(this.reader.result.toString());
         // @ts-ignore
-        this.router.navigateByUrl("/welcome/show")
+        //this.router.navigateByUrl("/welcome/show")
+        this.router.navigateByUrl("/welcome/calculate")
       }
     });
   }
