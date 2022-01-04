@@ -32,6 +32,14 @@ export interface PhoneGeoHashDateTimeCounts {
   geoHashNameCount: number;
 }
 
+export interface ExportPhonesResult{
+  phone: string;
+  geoHash: string;
+  beginTime: string;
+  endTime: string;
+  interval: number;
+}
+
 export interface PhoneGeoHashName {
   phone: string;
   geohash: string;

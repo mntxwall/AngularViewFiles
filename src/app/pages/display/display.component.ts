@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BackendService} from "../../backend.service";
-import {PhoneGeoHashDateTimeCounts, StayTime} from "../../headerindex";
+import {ExportPhonesResult, PhoneGeoHashDateTimeCounts, StayTime} from "../../headerindex";
 import {Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 
@@ -23,6 +23,8 @@ export class DisplayComponent implements OnInit {
 
   exportCsvString: string = "";
   isExporting = false;
+
+  exportDataList: ExportPhonesResult[] = [];
 
   //expandGeoHashDateTimes: StayTime[] | undefined = [];
 
@@ -132,18 +134,36 @@ export class DisplayComponent implements OnInit {
   };
 
   exportExcel(): void {
+
+
     this.downLoadFileName = Date.now().toString();
-    const header = [[]];
+
+
+    this.displayPhonesGeoHashDataTime.forEach(rows =>{
+      rows.dateTimes.map(dates =>{
+
+        let resultRow: ExportPhonesResult = {} as ExportPhonesResult;
+
+        resultRow.phone = rows.phone;
+        resultRow.geoHash = rows.geoHashName;
+        resultRow.beginTime = dates.start;
+        resultRow.endTime = dates.end;
+        resultRow.interval = dates.interval;
+
+        this.exportDataList.push(resultRow)
+      });
+    })
+
+    const header = [["用户号码","基站名称","进入时间","离开时间","停留时长"]];
 
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
 
     XLSX.utils.sheet_add_aoa(ws,header);
-    XLSX.utils.sheet_add_json(ws, this.displayPhonesGeoHashDataTime, {origin: 'A2', skipHeader: true})
+    XLSX.utils.sheet_add_json(ws, this.exportDataList, {origin: 'A2', skipHeader: true})
 
     XLSX.utils.book_append_sheet(wb, ws, 'result');
     XLSX.writeFile(wb, `${this.downLoadFileName}.xlsx`)
-
 
     //this.displayPhonesGeoHashDataTime.forEach()
 

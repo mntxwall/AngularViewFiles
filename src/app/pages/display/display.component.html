@@ -1,11 +1,12 @@
 <button nz-button nzType="primary"
-        (click)="exportData()"
+        (click)="exportExcel()"
         [nzLoading]="isExporting"
 >
   {{ isExporting ? '导出中' : '导出' }}
 </button>
+<!--exportData-->
 
-<nz-table nzTemplateMode>
+<nz-table nzTemplateMode [nzScroll]="{y: '700px'}">
   <thead>
     <tr>
       <th nzWidth="60px"></th>

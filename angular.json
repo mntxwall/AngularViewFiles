@@ -38,6 +38,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "xlsx"
+            ],
             "outputPath": "dist/AngularViewFiles",
             "index": "src/index.html",
             "main": "src/main.ts",
