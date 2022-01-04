@@ -33,13 +33,21 @@
     {{ isCalculate ? '处理中' : 'Go' }}
   </button>
 
+<!--
+  <button
+    nz-button
+    (click)="savetoExcel()">
+    下载
+  </button>
+  -->
+
 </div>
 
 <div>
-  <nz-table nzTemplateMode [nzScroll]="{ y: '600px' }">
+  <nz-table nzTemplateMode [nzScroll]="{ x:'1300px', y: '650px' }" id="excel-table">
     <thead>
     <tr>
-      <th *ngFor="let head of headers">{{ head }}</th>
+      <th nzWidth="100px" *ngFor="let head of headers">{{ head }}</th>
     </tr>
     </thead>
     <tbody>

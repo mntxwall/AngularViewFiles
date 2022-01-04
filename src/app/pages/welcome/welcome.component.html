@@ -8,6 +8,9 @@
     <p class="ant-upload-drag-icon">
       <i nz-icon nzType="inbox"></i>
     </p>
+    <div ngSwitch="requestURL">
+      <p *ngSwitchCase="'system'"></p>
+    </div>
     <p class="ant-upload-text">点击上传</p>
   </nz-upload>
 

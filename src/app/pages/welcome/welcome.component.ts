@@ -3,6 +3,7 @@ import {NzUploadFile} from "ng-zorro-antd/upload";
 import {Router} from "@angular/router";
 import {BackendService} from "../../backend.service";
 
+
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
@@ -15,12 +16,17 @@ export class WelcomeComponent implements OnInit {
 
   reader = new FileReader();
 
-   isLoading = false;
+  isLoading = false;
+
+  requestURL = "";
+
+
 
   constructor(private router : Router, private service: BackendService) { }
 
   ngOnInit() {
 
+    this.requestURL = this.router.url;
   }
 
   beforeUpload = (file: NzUploadFile): boolean => {
@@ -43,5 +49,7 @@ export class WelcomeComponent implements OnInit {
       }
     });
   }
+
+
 
 }

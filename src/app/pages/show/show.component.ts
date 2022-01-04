@@ -10,6 +10,10 @@ import {
   ViewData
 } from "../../headerindex";
 
+
+import * as XLSX from 'xlsx';
+
+
 @Component({
   selector: 'app-show',
   templateUrl: './show.component.html',
@@ -25,6 +29,9 @@ export class ShowComponent implements OnInit {
 
   //用于存储导入的文本数据中分析出来的表头
   headers : string[] = [];
+
+
+  fileName= 'ExcelSheet.xlsx';
 
   //rows表示根据换行符解析出来的每行.
   // 每行中又要string数组，根据逗号解析出来的每个字段
@@ -318,6 +325,19 @@ export class ShowComponent implements OnInit {
 
   }
 
+  savetoExcel():void {
+
+    let element = document.getElementById('excel-table');
+    const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, this.fileName);
+  }
+
   handleDate() {
 
     this.isCalculate = true;
@@ -365,7 +385,8 @@ export class ShowComponent implements OnInit {
 
           //把出现机场、车站、动车的字眼保存在另外的数组中
           if (e.geoHashName.includes('车站') || e.geoHashName.includes('机场')
-            || e.geoHashName.includes('动车') || e.geoHashName.includes('服务区')){
+            || e.geoHashName.includes('动车') || e.geoHashName.includes('服务区')
+          || e.geoHashName.includes('高铁') || e.geoHashName.includes('客运站')){
             this.tripPhoneGeoHahsDataTime.push(e)
           }
         }

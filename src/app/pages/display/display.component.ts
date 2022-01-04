@@ -4,6 +4,8 @@ import {PhoneGeoHashDateTimeCounts, StayTime} from "../../headerindex";
 import {Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 
+import * as XLSX from 'xlsx';
+
 @Component({
   selector: 'app-display',
   templateUrl: './display.component.html',
@@ -109,7 +111,6 @@ export class DisplayComponent implements OnInit {
     });
 
 
-
     const blob = new Blob([ "\uFEFF" + this.exportCsvString], { type: 'text/csv;charset=GBK;' });
 
     const a = document.createElement('a');
@@ -129,6 +130,24 @@ export class DisplayComponent implements OnInit {
  //   window.URL.revokeObjectURL(url);
     a.remove();
   };
+
+  exportExcel(): void {
+    this.downLoadFileName = Date.now().toString();
+    const header = [[]];
+
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+
+    XLSX.utils.sheet_add_aoa(ws,header);
+    XLSX.utils.sheet_add_json(ws, this.displayPhonesGeoHashDataTime, {origin: 'A2', skipHeader: true})
+
+    XLSX.utils.book_append_sheet(wb, ws, 'result');
+    XLSX.writeFile(wb, `${this.downLoadFileName}.xlsx`)
+
+
+    //this.displayPhonesGeoHashDataTime.forEach()
+
+  }
 
   exportData(): void {
 
