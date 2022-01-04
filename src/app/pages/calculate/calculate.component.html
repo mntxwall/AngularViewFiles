@@ -1,11 +1,4 @@
 <div>
-
-  <!--
-  <nz-select nzMode="tags" nzPlaceHolder="Tag Mode" nzAllowClear
-             [(ngModel)]="selectedHeaders">
-    <nz-option *ngFor="let head of headers" [nzLabel]="head" [nzValue]="head"></nz-option>
-  </nz-select>
-  -->
   <nz-form-label [nzSpan]="7">号码</nz-form-label>
   <nz-select nzShowSearch nzAllowClear nzPlaceHolder="选择相应的表头" [(ngModel)]="selectedNumbers">
     <nz-option *ngFor="let head of headers" [nzLabel]="head" [nzValue]="head"></nz-option>
@@ -21,8 +14,6 @@
     <nz-option *ngFor="let head of headers" [nzLabel]="head" [nzValue]="head"></nz-option>
   </nz-select>
 
-
-
   <nz-form-label [nzSpan]="7">基站名称</nz-form-label>
   <nz-select nzShowSearch nzAllowClear nzPlaceHolder="选择相应的表头" [(ngModel)]="selectedBashName">
     <nz-option *ngFor="let head of headers" [nzLabel]="head" [nzValue]="head"></nz-option>
@@ -33,18 +24,18 @@
     {{ isCalculate ? '处理中' : 'Go' }}
   </button>
 
-<!--
-  <button
-    nz-button
-    (click)="savetoExcel()">
-    下载
-  </button>
-  -->
+  <!--
+    <button
+      nz-button
+      (click)="savetoExcel()">
+      下载
+    </button>
+    -->
 
 </div>
 
 <div>
-  <nz-table nzTemplateMode [nzScroll]="{ x:'1300px', y: '650px' }" id="excel-table">
+  <nz-table nzTemplateMode [nzScroll]="{  x:'1300px', y: '650px'}">
     <thead>
     <tr>
       <th nzWidth="100px" *ngFor="let head of headers">{{ head }}</th>
@@ -52,8 +43,9 @@
     </thead>
     <tbody>
     <tr *ngFor="let row of displayRows">
-      <td *ngFor="let item of row">{{item}}</td>
+      <td *ngFor="let item of row.row">{{item}}</td>
     </tr>
     </tbody>
   </nz-table>
 </div>
+
