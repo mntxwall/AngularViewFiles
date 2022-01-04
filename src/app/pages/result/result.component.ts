@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {BackendService} from "../../backend.service";
 import {ExportPhonesResult} from "../../headerindex";
 import * as XLSX from "xlsx";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-result',
@@ -17,13 +18,19 @@ export class ResultComponent implements OnInit {
   isExporting = false;
 
 
-  constructor(private service: BackendService) { }
+  constructor(private router:Router,
+              private service: BackendService) { }
 
   ngOnInit(): void {
 
     this.service.getExportGeoHashDataTime().subscribe(data =>{
       this.displayPhonesGeoHashDataTime = data;
-    })
+    });
+
+    if (this.displayPhonesGeoHashDataTime.length <= 1){
+
+      this.router.navigateByUrl("/");
+    }
   }
 
   exportExcel(): void {
