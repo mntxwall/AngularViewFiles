@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {BackendService} from "../../backend.service";
-import {ExportPhonesResult} from "../../headerindex";
+import {ExportPhonesResult, PhoneGeoHashMerge} from "../../headerindex";
 import * as XLSX from "xlsx";
 import {Router} from "@angular/router";
 
@@ -13,10 +13,13 @@ export class ResultComponent implements OnInit {
 
   displayPhonesGeoHashDataTime: ExportPhonesResult[] = [];
 
+  mergePhonesGeoHashNameDataTime: PhoneGeoHashMerge[] = [];
+
   downLoadFileName: string = "";
 
   isExporting = false;
 
+  curGeoHashName: ExportPhonesResult = {} as ExportPhonesResult
 
   constructor(private router:Router,
               private service: BackendService) { }
@@ -24,13 +27,58 @@ export class ResultComponent implements OnInit {
   ngOnInit(): void {
 
     this.service.getExportGeoHashDataTime().subscribe(data =>{
-      this.displayPhonesGeoHashDataTime = data;
+      this.displayPhonesGeoHashDataTime = data.filter(t => t.geoHash.length > 1);
     });
+
+    this.doGeoHashNameMerge();
+
+    console.log(this.mergePhonesGeoHashNameDataTime)
 
     if (this.displayPhonesGeoHashDataTime.length <= 1){
 
       this.router.navigateByUrl("/");
     }
+  }
+
+  doGeoHashNameMerge():void {
+
+    let currentGeoHashNameArray = {} as PhoneGeoHashMerge
+
+    this.displayPhonesGeoHashDataTime.forEach(row =>{
+
+      console.log("row")
+      console.log(row)
+
+      if(typeof (currentGeoHashNameArray.baseArray) === "undefined"){
+        currentGeoHashNameArray.phone = row.phone
+        currentGeoHashNameArray.beginTime = row.beginTime
+
+        currentGeoHashNameArray.baseArray = []
+        currentGeoHashNameArray.baseArray.push(row.geoHashName)
+      }
+      else if (currentGeoHashNameArray.baseArray.find(t => {
+        return t === row.geoHashName
+        //t.localeCompare(row.geoHashName)
+      })){
+        currentGeoHashNameArray.endTime = row.endTime
+      }
+      else if(row.interval < 2){
+        currentGeoHashNameArray.endTime = row.endTime
+        currentGeoHashNameArray.baseArray.push(row.geoHashName)
+      }
+      else {
+        const tmp = {...currentGeoHashNameArray};
+        this.mergePhonesGeoHashNameDataTime.push(tmp);
+        currentGeoHashNameArray = {} as PhoneGeoHashMerge;
+
+      }
+
+      console.log("name array")
+      console.log(currentGeoHashNameArray)
+
+    })
+
+
   }
 
   exportExcel(): void {

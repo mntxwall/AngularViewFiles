@@ -79,13 +79,16 @@ export class CalculateComponent implements OnInit {
 
     setTimeout(() => {
 
-      this.rowsFromFile.forEach(rows =>{
+      //把最后一行排除掉，不然会报错。
+      //这里执行了两个操作，一个是按时间和号码排序，另一个是把最后的无效行去掉.
+      this.rowsFromFile.filter(t => t.row.length > 1).sort((a, b) =>
+        a.row[headerIndex.numberIndex].localeCompare(b.row[headerIndex.numberIndex]) ||
+        (new Date (a.row[headerIndex.dateIndex])).getTime() - (new Date (b.row[headerIndex.dateIndex])).getTime() ).forEach(rows =>{
         this.doTheTimeCalculating(headerIndex, rows.row);
         this.doGeoHashNameCalculation(headerIndex, rows.row);
       });
 
       this.matchTwoResult();
-
       console.log(this.resultPhonesGeoHashDataTime)
 
       this.service.setResultDisplayData(this.resultPhonesGeoHashDataTime);
@@ -162,13 +165,17 @@ export class CalculateComponent implements OnInit {
 
   doTheTimeCalculating(headerIndex: Headerindex, row: string[]):void {
 
+    //console.log(row.length)
+
     this.currentCalculate.phone = row[headerIndex.numberIndex].trim();
     this.currentCalculate.geoHash = row[headerIndex.geohashIndex].trim();
     this.currentCalculate.inDateTime = row[headerIndex.dateIndex].trim();
 
 
     ////上下两条如果用户号码与geohash相等，说明是同一个geohash中，需要累计时间
+    //加入了用户号码的判断，如果与上面的用户号码不一样，说明是新的号码要加入结果数组中.
     if (typeof (this.preCalculate.phone) !== "undefined" &&
+      this.currentCalculate.phone === this.preCalculate.phone &&
       this.currentCalculate.geoHash === this.preCalculate.geoHash){
       this.findValue = this.currentCalculate;
     }

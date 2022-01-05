@@ -72,7 +72,13 @@ export interface PhoneGeoHashNameCountNew{
   baseNameCount: number;
 }
 
-//export interface GeoHashGetNew
+export interface PhoneGeoHashMerge{
+  phone: string;
+  beginTime: string;
+  endTime: string;
+  interval: number;
+  baseArray: string[];
+  baseNameMerge: string;
+}
 
-export const  GET_CURRENT: number = 1;
-export const  GET_PREVIOS: number = 2;
+//export interface GeoHashGetNew
