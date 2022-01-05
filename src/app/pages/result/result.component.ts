@@ -19,8 +19,6 @@ export class ResultComponent implements OnInit {
 
   isExporting = false;
 
-  curGeoHashName: ExportPhonesResult = {} as ExportPhonesResult
-
   constructor(private router:Router,
               private service: BackendService) { }
 
@@ -46,15 +44,17 @@ export class ResultComponent implements OnInit {
 
     this.displayPhonesGeoHashDataTime.forEach(row =>{
 
-      console.log("row")
-      console.log(row)
+      //console.log("row")
+      //console.log(row)
 
       if(typeof (currentGeoHashNameArray.baseArray) === "undefined"){
         currentGeoHashNameArray.phone = row.phone
         currentGeoHashNameArray.beginTime = row.beginTime
+        currentGeoHashNameArray.endTime = row.endTime
 
         currentGeoHashNameArray.baseArray = []
         currentGeoHashNameArray.baseArray.push(row.geoHashName)
+        //this.mergePhonesGeoHashNameDataTime.push(currentGeoHashNameArray)
       }
       else if (currentGeoHashNameArray.baseArray.find(t => {
         return t === row.geoHashName
@@ -67,14 +67,29 @@ export class ResultComponent implements OnInit {
         currentGeoHashNameArray.baseArray.push(row.geoHashName)
       }
       else {
-        const tmp = {...currentGeoHashNameArray};
-        this.mergePhonesGeoHashNameDataTime.push(tmp);
-        currentGeoHashNameArray = {} as PhoneGeoHashMerge;
+        //currentGeoHashNameArray.baseArray.push(row.geoHashName)
+
+        //currentGeoHashNameArray.endTime = row.endTime
+        //const tmp = {...currentGeoHashNameArray};
+        //console.log("push")
+        this.mergePhonesGeoHashNameDataTime.push({...currentGeoHashNameArray});
+
+        /*this.mergePhonesGeoHashNameDataTime.push({
+          "phone":row.phone,
+          "beginTime":row.beginTime,
+          "endTime":"",
+          "interval":0,
+          "baseArray":[],
+          "baseNameMerge":""
+
+        })*/
+        //currentGeoHashNameArray = {} as PhoneGeoHashMerge;
+
 
       }
 
-      console.log("name array")
-      console.log(currentGeoHashNameArray)
+
+
 
     })
 
