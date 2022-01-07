@@ -88,6 +88,12 @@ export class CalculateComponent implements OnInit {
         this.doGeoHashNameCalculation(headerIndex, rows.row);
       });
 
+      //遇到最后一个是新的GEOHASH时，该条记录的endtime会是空值，将begintime值回填回去.
+      if(this.resultPhonesGeoHashDataTime[this.resultPhonesGeoHashDataTime.length - 1].endTime === ""){
+        this.resultPhonesGeoHashDataTime[this.resultPhonesGeoHashDataTime.length - 1].endTime =
+          this.resultPhonesGeoHashDataTime[this.resultPhonesGeoHashDataTime.length - 1].beginTime
+      }
+
       this.matchTwoResult();
       console.log(this.resultPhonesGeoHashDataTime)
 
@@ -195,11 +201,13 @@ export class CalculateComponent implements OnInit {
       let findPhoneGeoHash = this.resultPhonesGeoHashDataTime.filter(e => {
         return (e.phone === this.findValue.phone && e.geoHash === this.findValue.geoHash)
       });
-
-      findPhoneGeoHash[findPhoneGeoHash.length - 1].endTime = this.findValue.inDateTime
-      findPhoneGeoHash[findPhoneGeoHash.length - 1].interval = Math.round(Math.abs((new Date(findPhoneGeoHash[findPhoneGeoHash.length - 1].endTime).getTime()
-          - new Date(findPhoneGeoHash[findPhoneGeoHash.length - 1].beginTime).getTime()))
-        / (1000 * 60))
+      //如果有找到之前存在的结果，则在最后一个结果上进行操作
+      if(findPhoneGeoHash.length > 0){
+        findPhoneGeoHash[findPhoneGeoHash.length - 1].endTime = this.findValue.inDateTime
+        findPhoneGeoHash[findPhoneGeoHash.length - 1].interval = Math.round(Math.abs( (new Date(findPhoneGeoHash[findPhoneGeoHash.length - 1].endTime).getTime()
+            - new Date(findPhoneGeoHash[findPhoneGeoHash.length - 1].beginTime).getTime() ))
+          / (1000 * 60))
+      }
     }
 
     this.preCalculate.inDateTime = this.currentCalculate.inDateTime;

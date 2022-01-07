@@ -70,11 +70,15 @@ nz-header {
 }
 
 nz-content {
-  margin: 24px;
+  margin: 10px;
 }
 
 .inner-content {
   padding: 24px;
   background: #fff;
   height: 100%;
+}
+nz-footer {
+  padding: 5px 50px;
+  text-align: center;
 }
