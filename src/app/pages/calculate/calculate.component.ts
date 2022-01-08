@@ -9,6 +9,7 @@ import {
 } from "../../headerindex";
 import {Router} from "@angular/router";
 import {BackendService} from "../../backend.service";
+//import Geohash from "latlon-geohash";
 
 @Component({
   selector: 'app-calculate',
@@ -56,6 +57,8 @@ export class CalculateComponent implements OnInit {
     console.log(this.findValue == null)
 
     this.service.getTableData().subscribe(data => this.tableData = data);
+
+    //console.log(Geohash.encode(52.20, 0.12, 6));
 
     if (this.tableData === "") {
       this.router.navigateByUrl("/")
