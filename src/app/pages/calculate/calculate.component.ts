@@ -84,7 +84,8 @@ export class CalculateComponent implements OnInit {
 
       //把最后一行排除掉，不然会报错。
       //这里执行了两个操作，一个是按时间和号码排序，另一个是把最后的无效行去掉.
-      this.rowsFromFile.filter(t => t.row.length > 1).sort((a, b) =>
+      //把空的geohash先去掉
+      this.rowsFromFile.filter(t => t.row.length > 1 && t.row[headerIndex.geohashIndex].length > 1).sort((a, b) =>
         a.row[headerIndex.numberIndex].localeCompare(b.row[headerIndex.numberIndex]) ||
         (new Date (a.row[headerIndex.dateIndex])).getTime() - (new Date (b.row[headerIndex.dateIndex])).getTime() ).forEach(rows =>{
         this.doTheTimeCalculating(headerIndex, rows.row);

@@ -3,6 +3,7 @@ import {BackendService} from "../../backend.service";
 import {ExportPhonesResult, PhoneGeoHashMerge} from "../../headerindex";
 import * as XLSX from "xlsx";
 import {Router} from "@angular/router";
+import Geohash from "latlon-geohash";
 
 @Component({
   selector: 'app-result',
@@ -43,6 +44,22 @@ export class ResultComponent implements OnInit {
     }
   }
 
+  geoHashNeighboursArrays(geoHash:string): string[] {
+
+    const geoHashNeighbours = Geohash.neighbours(geoHash.substr(0, 5))
+
+    return [
+      geoHashNeighbours.n,
+      geoHashNeighbours.s,
+      geoHashNeighbours.e,
+      geoHashNeighbours.w,
+      geoHashNeighbours.ne,
+      geoHashNeighbours.nw,
+      geoHashNeighbours.se,
+      geoHashNeighbours.sw
+    ]
+
+  }
   doGeoHashNameMerge():void {
 
     let currentGeoHashNameArray = {} as PhoneGeoHashMerge
@@ -56,6 +73,7 @@ export class ResultComponent implements OnInit {
           "endTime":row.endTime,
           "interval":0,
           "baseArray":[row.geoHashName],
+          "geoHashNeighbours":this.geoHashNeighboursArrays(row.geoHash),
           "baseNameMerge":""
         }
       }
@@ -67,7 +85,7 @@ export class ResultComponent implements OnInit {
 
         if (typeof findBaseName === "undefined" && row.interval >= 2){
           currentGeoHashNameArray.endTime = this.preGeoHashName.endTime
-          currentGeoHashNameArray.baseArray.push(row.geoHashName)
+          currentGeoHashNameArray.baseArray.push( row.geoHashName)
 
           currentGeoHashNameArray = this.doDataUpdateAndInsertIntoArrays(currentGeoHashNameArray)
 
@@ -78,6 +96,7 @@ export class ResultComponent implements OnInit {
             "endTime":row.endTime,
             "interval":0,
             "baseArray":[row.geoHashName],
+            "geoHashNeighbours":this.geoHashNeighboursArrays(row.geoHash),
             "baseNameMerge":""
           }
         }else {
