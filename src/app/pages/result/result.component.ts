@@ -44,20 +44,22 @@ export class ResultComponent implements OnInit {
     }
   }
 
-  geoHashNeighboursArrays(geoHash:string): string[] {
+  geoHashNeighboursArrays(geoHash:string): Set<string> {
 
     const geoHashNeighbours = Geohash.neighbours(geoHash.substr(0, 5))
 
-    return [
-      geoHashNeighbours.n,
-      geoHashNeighbours.s,
-      geoHashNeighbours.e,
-      geoHashNeighbours.w,
-      geoHashNeighbours.ne,
-      geoHashNeighbours.nw,
-      geoHashNeighbours.se,
-      geoHashNeighbours.sw
-    ]
+    let tmp = new Set<string>()
+
+    tmp.add(geoHashNeighbours.e)
+    tmp.add(geoHashNeighbours.n)
+    tmp.add(geoHashNeighbours.s)
+    tmp.add(geoHashNeighbours.w)
+    tmp.add(geoHashNeighbours.ne)
+    tmp.add(geoHashNeighbours.nw)
+    tmp.add(geoHashNeighbours.se)
+    tmp.add(geoHashNeighbours.sw)
+    tmp.add(geoHash.substr(0, 5))
+    return tmp
 
   }
   doGeoHashNameMerge():void {
@@ -81,10 +83,56 @@ export class ResultComponent implements OnInit {
         let findBaseName = currentGeoHashNameArray.baseArray.find(t => t=== row.geoHashName)
 
         //什么时候把geohashName加入到数组中
-        if (row.interval < 1 && typeof findBaseName === "undefined") currentGeoHashNameArray.baseArray.push(row.geoHashName)
+        //没找到该geohash时，交且切换时间为0,1，且geohash在上一个geohash 5位里面
+        if(currentGeoHashNameArray.geoHashNeighbours.has(row.geoHash.substr(0,5)) ||
+          typeof findBaseName !== "undefined"){
+
+          currentGeoHashNameArray.endTime = row.endTime
+          currentGeoHashNameArray.baseArray.push(row.geoHashName)
+          this.geoHashNeighboursArrays(row.geoHash).forEach(t => currentGeoHashNameArray.geoHashNeighbours.add(t))
+        }
+        else{
+
+          currentGeoHashNameArray.endTime = this.preGeoHashName.endTime
+
+          //currentGeoHashNameArray.baseArray.push( row.geoHashName)
+
+          currentGeoHashNameArray = this.doDataUpdateAndInsertIntoArrays(currentGeoHashNameArray)
+
+          this.mergePhonesGeoHashNameDataTime.push({...currentGeoHashNameArray})
+
+          currentGeoHashNameArray = {
+            "phone":row.phone,
+            "beginTime":row.beginTime,
+            "endTime":row.endTime,
+            "interval":0,
+            "baseArray":[row.geoHashName],
+            "geoHashNeighbours":this.geoHashNeighboursArrays(row.geoHash),
+            "baseNameMerge":""
+          }
+
+        }
+
+        /*
+
+        if (row.interval < 1 ){
+
+          if(currentGeoHashNameArray.geoHashNeighbours.has(row.geoHash.substr(0,5))){
+
+            currentGeoHashNameArray.baseArray.push(row.geoHashName)
+
+            this.geoHashNeighboursArrays(row.geoHash).forEach(t => currentGeoHashNameArray.geoHashNeighbours.add(t))
+          }
+
+
+          //currentGeoHashNameArray.geoHashNeighbours = new Set(... currentGeoHashNameArray.geoHashNeighbours)
+
+          //currentGeoHashNameArray.geoHashNeighbours.push()
+        }
 
         if (typeof findBaseName === "undefined" && row.interval >= 2){
           currentGeoHashNameArray.endTime = this.preGeoHashName.endTime
+
           currentGeoHashNameArray.baseArray.push( row.geoHashName)
 
           currentGeoHashNameArray = this.doDataUpdateAndInsertIntoArrays(currentGeoHashNameArray)
@@ -101,7 +149,7 @@ export class ResultComponent implements OnInit {
           }
         }else {
           currentGeoHashNameArray.endTime = row.endTime
-        }
+        }*/
       }
       this.preGeoHashName.phone = row.phone
       this.preGeoHashName.endTime = row.endTime;
@@ -115,6 +163,7 @@ export class ResultComponent implements OnInit {
 
   }
 
+  //计算时间，并且把Array中的字符串用|拼接起来
   doDataUpdateAndInsertIntoArrays(t: PhoneGeoHashMerge): PhoneGeoHashMerge {
     t.interval = Math.round(Math.abs( (new Date(t.endTime).getTime()
         - new Date(t.beginTime).getTime() ))

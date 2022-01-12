@@ -78,7 +78,7 @@ export interface PhoneGeoHashMerge{
   endTime: string;
   interval: number;
   baseArray: string[];
-  geoHashNeighbours: string[];
+  geoHashNeighbours: Set<string>;
   baseNameMerge: string;
 }
 
